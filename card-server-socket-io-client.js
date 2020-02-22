@@ -1,3 +1,4 @@
+var uuid = require('uuid'); 
 var min = 5;
 var max = 10;
 var getRandom = function(){
@@ -12,7 +13,8 @@ exports.getConnector = function(){
     return {
         random:0,
         clientNumber:0,
-        clientUrl:"localhost:8090",
+        clientId:uuid.v4(),
+        clientUrl:"localhost:8000",
         init:function(){
             //console.log("Hello");
             this.random = getRandom();
@@ -26,10 +28,12 @@ exports.getConnector = function(){
         connect:function(callback){
             var self = this;
             var socket = require('socket.io-client')('http://'+self.clientUrl);
+            console.log("Client attempting to connect at: ");
+            console.log(self.clientUrl);
             
             socket.on('connect', function(){
-                //console.log("Connected");
-                socket.emit("action", {type:"ADD_CARD_USER", clientNumber:self.clientNumber});
+                console.log(self.clientNumber + " connected");
+                socket.emit("action", {type:"ADD_CARD_USER", clientId:self.clientId, clientNumber:self.clientNumber});
                 callback();
             });
             socket.on('start-timer', function(data){
@@ -44,7 +48,10 @@ exports.getConnector = function(){
             });
             socket.on('setCode', function(data){
                     if(data.code){
-                        console.log(self.clientNumber + " is a winner!");
+                        console.log(self.clientNumber + "(" + self.clientId + ") is a winner(" + data.code + ")!");
+                    }
+                    else if(data.code === 0){
+                        console.log(self.clientNumber + "(" + self.clientId + ") is not a winner(" + data.code + ")!");
                     }
                 }
             );

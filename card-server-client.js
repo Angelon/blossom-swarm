@@ -6,10 +6,10 @@ var myArgs = process.argv.slice(2);
 var connectionCount = myArgs[0];
 var connectionUrl = myArgs[1];
 if(!connectionCount)
-    connectionCount = 5;
+    connectionCount = 1;
 
 if(!connectionUrl)
-    connectionUrl = "localhost:8090";
+    connectionUrl = "ws://chat-Publi-MYR76686FFYG-287595339.us-east-1.elb.amazonaws.com:8080";
 
 console.log('connectionCount: ', connectionCount);
 console.log('connectionUrl: ', connectionUrl);
